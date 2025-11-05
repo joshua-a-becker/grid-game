@@ -1,0 +1,9 @@
+name = "blank-project"
+
+[tajriba.auth]
+srtoken = "tYuwCaLwahVrGPBT"
+
+[[tajriba.auth.users]]
+name = "Admin"
+username = "admin"
+password = "qWKkHrgf"
