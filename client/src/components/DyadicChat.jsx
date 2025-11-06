@@ -35,6 +35,21 @@ export function DyadicChat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Calculate unread count for a specific partner
+  const getUnreadCount = (partnerId) => {
+    // Don't show unread for active tab
+    if (partnerId === activePartnerId) return 0;
+
+    const dyadKey = getDyadKey(partnerId);
+    const dyadMessages = game.get(dyadKey) || [];
+    const timestamps = player.get("chatReadTimestamps") || {};
+    const lastRead = timestamps[dyadKey] || 0;
+
+    return dyadMessages.filter(msg =>
+      msg.senderId !== player.id && msg.timestamp > lastRead
+    ).length;
+  };
+
   // Send message
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -72,19 +87,39 @@ export function DyadicChat() {
         {/* Tabs for switching between dyadic chats */}
         <div className="bg-gray-100 border-b border-gray-300 rounded-t-lg">
           <div className="flex">
-            {otherPlayers.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => setActivePartnerId(p.id)}
-                className={`flex-1 px-3 py-2 text-sm font-medium transition-colors ${
-                  activePartnerId === p.id
-                    ? "bg-white text-blue-600 border-b-2 border-blue-600"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-200"
-                }`}
-              >
-                Consultant {p.get("playerNumber")}
-              </button>
-            ))}
+            {otherPlayers.map((p) => {
+              const unreadCount = getUnreadCount(p.id);
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => {
+                    // Mark current tab as read before switching
+                    if (activePartnerId) {
+                      const currentDyadKey = getDyadKey(activePartnerId);
+                      const timestamps = player.get("chatReadTimestamps") || {};
+                      player.set("chatReadTimestamps", {
+                        ...timestamps,
+                        [currentDyadKey]: Date.now()
+                      });
+                    }
+                    // Then switch tabs
+                    setActivePartnerId(p.id);
+                  }}
+                  className={`flex-1 px-3 py-2 text-sm font-medium transition-colors relative ${
+                    activePartnerId === p.id
+                      ? "bg-white text-blue-600 border-b-2 border-blue-600"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-200"
+                  }`}
+                >
+                  Consultant {p.get("playerNumber")}
+                  {unreadCount > 0 && (
+                    <span className="absolute top-1 right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
 
