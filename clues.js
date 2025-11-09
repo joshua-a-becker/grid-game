@@ -2,7 +2,7 @@ export const clues = [
     {
         id: 1,
         clue: "From your team’s independent research, the theater needs to improve its community engagement by creating key partnerships with local establishments.",
-        question: "What area of improvement did Team Red’s research reveal?",
+        question: "What area of improvement did the red file research reveal?",
         response: "Improve community engagement by creating partnership with local establishments"
     },
 
@@ -30,7 +30,7 @@ export const clues = [
     {
         id: 5,
         clue: "From your team’s independent research, the theater needs to increase its financial sustainability by finding new revenue sources, and aspects to reduce spending.",
-        question: "What area of improvement did Team Blue’s research reveal? ",
+        question: "What area of improvement did the blue file reveal? ",
         response: "Increase financial sustainability by finding new revenue sources and cost cutting"
     },
 
@@ -58,7 +58,7 @@ export const clues = [
     {
         id: 9,
         clue: "From your team’s independent research, the theater needs to create shows that broaden its target demographics and create programs that keep up with popular culture and contemporary events.",
-        question: "What area of improvement did Team Green’s research reveal?",
+        question: "What area of improvement did the green file reveal?",
         response: "Broaden target demographics and create programs that keep up with contemporary culture"
     },
 

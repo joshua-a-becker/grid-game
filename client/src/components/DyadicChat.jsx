@@ -7,9 +7,11 @@ export function DyadicChat() {
   const game = useGame();
 
   const myPlayerNumber = player.get("playerNumber");
+  const chatPeerIds = player.get("chatPeers") || [];
 
-  // Get other players (excluding self)
-  const otherPlayers = players.filter(p => p.get("playerNumber") !== myPlayerNumber)
+  // Get chat peer players (only players of opposite type)
+  const otherPlayers = players
+    .filter(p => chatPeerIds.includes(p.id))
     .sort((a, b) => a.get("playerNumber") - b.get("playerNumber"));
 
   // Default to first other player

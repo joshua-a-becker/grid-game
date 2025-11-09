@@ -5,8 +5,8 @@ import {
   useStage,
 } from "@empirica/core/player/classic/react";
 import React from "react";
-import { Avatar } from "../components/Avatar";
-import { Button } from "../components/Button";
+import { Avatar } from "../components/Avatar.jsx";
+import { Button } from "../components/Button.jsx";
 import "../../node_modules/@empirica/core/dist/player-classic-react.css";
 
 export function JellyBeans() {

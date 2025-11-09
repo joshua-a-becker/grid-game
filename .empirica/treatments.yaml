@@ -14,6 +14,6 @@ treatments:
       factors:
         playerCount: 1
     - name: default
-      desc: three player game
+      desc: four player game
       factors:
-        playerCount: 3
+        playerCount: 4

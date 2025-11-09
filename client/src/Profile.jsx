@@ -4,8 +4,8 @@ import {
   useStage,
 } from "@empirica/core/player/classic/react";
 import React, { useState } from "react";
-import { Avatar } from "./components/Avatar";
-import { Timer } from "./components/Timer";
+import { Avatar } from "./components/Avatar.jsx";
+import { Timer } from "./components/Timer.jsx";
 
 export function Profile() {
   const player = usePlayer();

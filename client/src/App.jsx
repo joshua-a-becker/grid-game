@@ -2,10 +2,10 @@ import { EmpiricaClassic } from "@empirica/core/player/classic";
 import { EmpiricaContext } from "@empirica/core/player/classic/react";
 import { EmpiricaMenu, EmpiricaParticipant } from "@empirica/core/player/react";
 import React, { useEffect } from "react";
-import { Game } from "./Game";
-import { ExitSurvey } from "./intro-exit/ExitSurvey";
-import { Introduction } from "./intro-exit/Introduction";
-import { AutoPlayerIdForm } from "./intro-exit/AutoPlayerIdForm";
+import { Game } from "./Game.jsx";
+import { ExitSurvey } from "./intro-exit/ExitSurvey.jsx";
+import { Introduction } from "./intro-exit/Introduction.jsx";
+import { AutoPlayerIdForm } from "./intro-exit/AutoPlayerIdForm.jsx";
 
 // Generate random 20-character alphanumeric string
 function generateParticipantKey() {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { usePlayer, usePlayers } from "@empirica/core/player/classic/react";
 import { clues, sharedClues } from "../../../clues.js";
-import { Timer } from "./Timer";
+import { Timer } from "./Timer.jsx";
 
 export function Discussion() {
   const player = usePlayer();
@@ -12,10 +12,12 @@ export function Discussion() {
   const myPlayerNumber = player.get("playerNumber");
   const myClueIds = player.get("clues") || [];
 
-  // Get all players sorted by player number
-  const sortedPlayers = [...players].sort(
-    (a, b) => a.get("playerNumber") - b.get("playerNumber")
-  );
+  // Define the three clue sets with their team colors
+  const clueSets = [
+    { name: "Red", clueIds: [1, 2, 3, 4] },
+    { name: "Blue", clueIds: [5, 6, 7, 8] },
+    { name: "Green", clueIds: [9, 10, 11, 12] }
+  ];
 
   // Create a map of clue id to clue object
   const clueMap = {};
@@ -104,23 +106,21 @@ export function Discussion() {
         }}>
         {activeTab === "information" && (
           <div className="grid grid-cols-3 gap-4">
-            {sortedPlayers.map((p) => {
-              const pNum = p.get("playerNumber");
-              const pClueIds = p.get("clues") || [];
-              const isMe = pNum === myPlayerNumber;
+            {clueSets.map((clueSet) => {
+              const isMyClueSet = clueSet.clueIds.some(id => myClueIds.includes(id));
 
               return (
-                <div key={p.id} className="flex flex-col gap-4">
+                <div key={clueSet.name} className="flex flex-col gap-4">
                   {/* Column Header */}
-                  <div className={`rounded-lg p-4 ${isMe ? 'bg-blue-600' : 'bg-gray-700'} text-white`}>
+                  <div className={`rounded-lg p-4 ${isMyClueSet ? 'bg-blue-600' : 'bg-gray-700'} text-white`}>
                     <h3 className="font-semibold text-lg">
-                      Consultant {pNum}
-                      {isMe && " (You)"}
+                      {clueSet.name} File
+                      {isMyClueSet && " (You)"}
                     </h3>
                   </div>
 
                   {/* Clue Cards */}
-                  {pClueIds.map((clueId) => {
+                  {clueSet.clueIds.map((clueId) => {
                     const clue = clueMap[clueId];
                     if (!clue) return null;
 

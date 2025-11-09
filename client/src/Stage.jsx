@@ -6,9 +6,9 @@ import {
 } from "@empirica/core/player/classic/react";
 import { Loading } from "@empirica/core/player/react";
 import React from "react";
-import { JellyBeans } from "./examples/JellyBeans";
-import { MineSweeper } from "./examples/MineSweeper";
-import { Discussion } from "./components/Discussion";
+import { JellyBeans } from "./examples/JellyBeans.jsx";
+import { MineSweeper } from "./examples/MineSweeper.jsx";
+import { Discussion } from "./components/Discussion.jsx";
 
 export function Stage() {
   const player = usePlayer();

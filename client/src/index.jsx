@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import "@unocss/reset/tailwind-compat.css";
 import "virtual:uno.css";
 import "../node_modules/@empirica/core/dist/player.css";
-import App from "./App";
+import App from "./App.jsx";
 import "./index.css";
 
 const container = document.getElementById("root");

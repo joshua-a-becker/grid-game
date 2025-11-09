@@ -1,7 +1,7 @@
 import { usePlayer } from "@empirica/core/player/classic/react";
 import React, { useState } from "react";
-import { Alert } from "../components/Alert";
-import { Button } from "../components/Button";
+import { Alert } from "../components/Alert.jsx";
+import { Button } from "../components/Button.jsx";
 
 export function ExitSurvey({ next }) {
   const labelClassName = "block text-sm font-medium text-gray-700 my-2";

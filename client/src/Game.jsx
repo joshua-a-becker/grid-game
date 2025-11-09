@@ -1,8 +1,8 @@
 import { useGame } from "@empirica/core/player/classic/react";
 
 import React from "react";
-import { Stage } from "./Stage";
-import { DyadicChat } from "./components/DyadicChat";
+import { Stage } from "./Stage.jsx";
+import { DyadicChat } from "./components/DyadicChat.jsx";
 
 export function Game() {
   const game = useGame();

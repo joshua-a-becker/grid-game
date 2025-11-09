@@ -1,7 +1,7 @@
 import { Sweeper, usePlayer } from "@empirica/core/player/classic/react";
 import React from "react";
-import { Avatar } from "../components/Avatar";
-import { Button } from "../components/Button";
+import { Avatar } from "../components/Avatar.jsx";
+import { Button } from "../components/Button.jsx";
 
 export function MineSweeper() {
   const player = usePlayer();
