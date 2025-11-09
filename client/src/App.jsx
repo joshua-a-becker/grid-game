@@ -35,7 +35,7 @@ export default function App() {
   const url = `${protocol}//${host}/query`;
 
   function introSteps({ game, player }) {
-    return [];
+    return [Introduction];
   }
 
   function exitSteps({ game, player }) {

@@ -25,7 +25,10 @@ setLogLevel(argv["loglevel"] || "info");
   );
 
   ctx.register(ClassicLoader);
-  ctx.register(Classic());
+  ctx.register(Classic({
+    disableAssignment: true,  // Disable automatic assignment
+    disableIntroCheck: false,  // Keep intro check for game start
+  }));
   ctx.register(Lobby());
   ctx.register(Empirica);
   ctx.register(function (_) {
