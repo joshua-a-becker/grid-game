@@ -17,6 +17,9 @@ export function Discussion() {
   const myPlayerNumber = player.get("playerNumber");
   const chatPeers = player.get("chatPeers") || [];
 
+  const taskDescriptionRaw = game?.get("taskDescription") || "";
+  const taskDescription = taskDescriptionRaw.replace(/{PLAYER_NUMBER}/g, myPlayerNumber);
+
   // Handle skip stage (dev only)
   const handleSkipStage = () => {
     player.stage.set("submit", true);
@@ -294,9 +297,7 @@ export function Discussion() {
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 Task Description
               </h2>
-              <div className="text-gray-700 space-y-4 whitespace-pre-wrap">
-                {game?.get("taskDescription") || ""}
-              </div>
+              <div className="text-gray-700" dangerouslySetInnerHTML={{__html: taskDescription}} />
             </div>
           </div>
         )}

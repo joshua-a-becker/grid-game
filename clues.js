@@ -3,7 +3,7 @@ export const cluesByColor = {
     red: [
         {
             id: 1,
-            clue: "From your team's independent research, the Riverside E-Sports Arena should improve community engagement by creating partnerships with local establishments.",
+            clue: "From the independent research found in the red file, the Riverside E-Sports Arena should improve community engagement by creating partnerships with local establishments.",
             question: "What area of improvement did the red file research reveal?",
             response: "Improve community engagement by creating partnership with local establishments"
         },
@@ -143,9 +143,27 @@ export const sharedClues = [
 ];
 
 export const taskDescription = `
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        <p style="margin-bottom: 1rem;">
+          You will have 20-minutes to gather information necessary to present a solution for Riverside E-Sports Arena.
+        </p>
 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        <p style="margin-bottom: 1rem;">
+          During the group activity phase, you will have the opportunity to chat with two other consultants on your team. These chats are live, are individual direct chats between you and the recipient. There is no "group chat" that includes all consultants.
+        </p>
 
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.
+        <p style="margin-bottom: 1rem;">
+          <strong>You will be Consultant {PLAYER_NUMBER} for this task.</strong>
+        </p>
+
+        <p style="margin-bottom: 1rem;">
+          Throughout the activity, as you gain additional information, please fill out the Information Table, and note who told you the information that you needed.
+        </p>
+
+        <p style="margin-bottom: 1rem;">
+          As mentioned before, you'll note that the shared information is available on the Shared Information tab.
+        </p>
+
+        <p style="margin-bottom: 1rem;">
+          These instructions will be available on the Task Description tab.
+        </p>
 `;

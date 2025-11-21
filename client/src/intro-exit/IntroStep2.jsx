@@ -9,7 +9,7 @@ export function IntroStep2({ next }) {
       </h2>
       <div className="mb-8">
         <p className="text-gray-700 leading-relaxed">
-          Today you will work in teams of four to complete a consulting project for the Riverside E-Sports Arena – a once well-established venue with more than 40 years of experience hosting E-Sports competitions at its state-of-the-art E-Sports Arenas. For example, Riverside E-Sports Arena has hosted tournaments across games such as Call of Duty, FIFA, NBA2K, Halo, and more. Riverside E-Sports Arena is struggling financially, and is needing consultants to assist with their financial planning.
+          Today you will work in teams of four to complete a consulting project for the <b>Riverside E-Sports Arena</b> – a once well-established venue with more than 40 years of experience hosting E-Sports competitions at its state-of-the-art E-Sports Arenas. For example, Riverside E-Sports Arena has hosted tournaments across games such as Call of Duty, FIFA, NBA2K, Halo, and more. <b>Riverside E-Sports Arena is struggling financially, and is needing consultants to assist with their financial planning.</b>
         </p>
       </div>
       <Button handleClick={next}>

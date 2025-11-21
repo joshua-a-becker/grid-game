@@ -15,12 +15,11 @@ export function PrivateInfoPage({ onNext }) {
       </h2>
 
       <p className="text-gray-700 mb-6">
-        Now, you will review file-specific information about the Riverside E-Sports Arena.
-        Again, this information will be unique to those who have access to this given file.
-        In other words, while you will have access to the unique information from your own file,
-        you will not have access to information unique to other files.
+        Now, you will review file-specific information about the Riverside E-Sports Arena. Again, this information will be unique to those who have access to this given file. In other words, while you will have access to the unique information from your own file, you will not have access to information unique to other files.
       </p>
-
+      <p className="text-gray-800 leading-relaxed mb-4">
+        Please take a moment to read through the information, but there’s no need to write it down, as it will be available for you during the group activity.
+      </p>
       <div className="bg-gray-50 rounded-lg p-6 mb-6 border-2 border-gray-200">
         <h3 className="text-xl font-semibold text-gray-900 mb-4 capitalize">
           {fileColor} File

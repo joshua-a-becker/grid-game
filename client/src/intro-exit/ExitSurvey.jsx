@@ -31,7 +31,7 @@ export function ExitSurvey({ next }) {
 
   return (
     <div className="py-8 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <Alert title="Bonus">
+      {/*<Alert title="Bonus">
         <p>
           Please submit the following code to receive your bonus:{" "}
           <strong>{player.id}</strong>.
@@ -40,7 +40,7 @@ export function ExitSurvey({ next }) {
           Your final <strong>bonus</strong> is in addition of the{" "}
           <strong>1 base reward</strong> for completing the HIT.
         </p>
-      </Alert>
+      </Alert>*/}
 
       <form
         className="mt-12 space-y-8 divide-y divide-gray-200"
@@ -58,53 +58,66 @@ export function ExitSurvey({ next }) {
               </p>
             </div>
 
-            <div className="space-y-8 mt-6">
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="age" className={labelClassName}>
-                    Age
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      id="age"
-                      name="age"
-                      type="number"
-                      autoComplete="off"
-                      className={inputClassName}
-                      value={age}
-                      onChange={(e) => setAge(e.target.value)}
-                    />
-                  </div>
+            <div className="space-y-8 mt-6 max-w-xs">
+              <div>
+                <label htmlFor="age" className={labelClassName}>
+                  Age
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="age"
+                    name="age"
+                    type="number"
+                    autoComplete="off"
+                    className={inputClassName}
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                  />
                 </div>
-                <div>
-                  <label htmlFor="gender" className={labelClassName}>
-                    Gender
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      id="gender"
-                      name="gender"
-                      autoComplete="off"
-                      className={inputClassName}
-                      value={gender}
-                      onChange={(e) => setGender(e.target.value)}
-                    />
-                  </div>
+              </div>
+
+              <div>
+                <label htmlFor="gender" className={labelClassName}>
+                  Gender
+                </label>
+                <div className="mt-1">
+                  <select
+                    id="gender"
+                    name="gender"
+                    className={inputClassName}
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                  >
+                    <option value="">Select...</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Non-Binary">Non-Binary</option>
+                  </select>
                 </div>
-                <div>
-                  <label htmlFor="race" className={labelClassName}>
-                    Race
-                  </label>
-                  <div className="mt-1">
-                    <input
-                      id="race"
-                      name="race"
-                      autoComplete="off"
-                      className={inputClassName}
-                      value={race}
-                      onChange={(e) => setRace(e.target.value)}
-                    />
-                  </div>
+              </div>
+
+              <div>
+                <label htmlFor="race" className={labelClassName}>
+                  Race
+                </label>
+                <div className="mt-1">
+                  <select
+                    id="race"
+                    name="race"
+                    className={inputClassName}
+                    value={race}
+                    onChange={(e) => setRace(e.target.value)}
+                  >
+                    <option value="">Select...</option>
+                    <option value="White">White</option>
+                    <option value="Black">Black</option>
+                    <option value="Asian">Asian</option>
+                    <option value="Hispanic or Latino/a">Hispanic or Latino/a</option>
+                    <option value="Middle Eastern">Middle Eastern</option>
+                    <option value="Multiracial">Multiracial</option>
+                    <option value="Other">Other</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                  </select>
                 </div>
               </div>
 

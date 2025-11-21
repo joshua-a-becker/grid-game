@@ -16,7 +16,9 @@ export function Profile() {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
   const score = player.get("score") || 0;
-  const taskDescription = game?.get("taskDescription") || "";
+  const playerNumber = player.get("playerNumber") || "";
+  const taskDescriptionRaw = game?.get("taskDescription") || "";
+  const taskDescription = taskDescriptionRaw.replace(/{PLAYER_NUMBER}/g, playerNumber);
 
   // Dev mode skip stage handler
   const handleSkipStage = () => {
@@ -69,9 +71,7 @@ export function Profile() {
               ✖
             </button>
             <h2 className="text-lg font-bold mb-4">Task Description</h2>
-            <div className="text-gray-700 space-y-4 whitespace-pre-wrap">
-              {taskDescription}
-            </div>
+            <div className="text-gray-700" dangerouslySetInnerHTML={{__html: taskDescription}} />
           </div>
         </div>
       )}

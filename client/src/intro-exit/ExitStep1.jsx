@@ -1,9 +1,10 @@
-import { usePlayer } from "@empirica/core/player/classic/react";
+import { usePlayer, usePlayers } from "@empirica/core/player/classic/react";
 import React, { useState } from "react";
 import { Button } from "../components/Button.jsx";
 
 export function ExitStep1({ next }) {
   const player = usePlayer();
+  const players = usePlayers();
   const [answers, setAnswers] = useState({
     goBetween: "",
     gatekeeper: ""
@@ -19,6 +20,20 @@ export function ExitStep1({ next }) {
     next();
   };
 
+  // Get chat peer numbers
+  const chatPeers = player.get("chatPeers") || [];
+  const chatPeerNumbers = chatPeers
+    .map(peerId => {
+      const peer = players.find(p => p.id === peerId);
+      return peer ? peer.get("playerNumber") : null;
+    })
+    .filter(num => num !== null)
+    .sort((a, b) => a - b);
+
+  const consultantsText = chatPeerNumbers.length === 2
+    ? `Consultants ${chatPeerNumbers[0]} and ${chatPeerNumbers[1]}`
+    : "Consultants";
+
   const questions = [
     {
       id: "goBetween",
@@ -26,7 +41,7 @@ export function ExitStep1({ next }) {
     },
     {
       id: "gatekeeper",
-      text: "During the activity, I had to act as a gatekeeper, that is, controlling the flow of information between Bystanders 1 and 2."
+      text: `During the activity, I had to act as a gatekeeper, that is, controlling the flow of information between ${consultantsText}.`
     }
   ];
 

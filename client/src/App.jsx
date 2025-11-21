@@ -29,12 +29,13 @@ function generateParticipantKey() {
 export default function App() {
   const urlParams = new URLSearchParams(window.location.search);
   const playerKey = urlParams.get("participantKey") || "";
+  const devKey = urlParams.get("devKey") || ""
   const k = urlParams.get("k") || "";
   const skipIntro = urlParams.get("skipIntro") || false;
 
   // If no participantKey, generate one along with a random gender and redirect
   useEffect(() => {
-    if (!playerKey) {
+    if (!playerKey && devKey==="oandi") {
       const newKey = generateParticipantKey();
       const randomGender = Math.random() < 0.5 ? "M" : "F";
       urlParams.set("participantKey", newKey);
