@@ -1,24 +1,16 @@
-import { useGame } from "@empirica/core/player/classic/react";
-
 import React from "react";
 import { Stage } from "./Stage.jsx";
-import { DyadicChat } from "./components/DyadicChat.jsx";
+import {
+  usePlayer
+} from "@empirica/core/player/classic/react";
 
 export function Game() {
-  const game = useGame();
-  const { playerCount } = game.get("treatment");
-
+  const player = usePlayer();
+  console.log("DEBUG HERE ---- " + player.get("condition"))
+  window.player=player;
   return (
-    <div className="h-full w-full flex overflow-hidden">
-      <div className="h-full w-full overflow-hidden">
-        <Stage />
-      </div>
-
-      {playerCount > 1 && (
-        <div className="h-full w-128">
-          <DyadicChat />
-        </div>
-      )}
+    <div className="h-full w-full overflow-hidden">
+      <Stage />
     </div>
   );
 }

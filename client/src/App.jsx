@@ -4,8 +4,17 @@ import { EmpiricaMenu, EmpiricaParticipant } from "@empirica/core/player/react";
 import React, { useEffect } from "react";
 import { Game } from "./Game.jsx";
 import { ExitSurvey } from "./intro-exit/ExitSurvey.jsx";
+import { ExitStep1 } from "./intro-exit/ExitStep1.jsx";
+import { ExitStep2 } from "./intro-exit/ExitStep2.jsx";
+import { SubmitPage } from "./intro-exit/SubmitPage.jsx";
 import { Introduction } from "./intro-exit/Introduction.jsx";
 import { AutoPlayerIdForm } from "./intro-exit/AutoPlayerIdForm.jsx";
+import { IntroStep0 } from "./intro-exit/IntroStep0.jsx";
+import { IntroStep1 } from "./intro-exit/IntroStep1.jsx";
+import { IntroStep2 } from "./intro-exit/IntroStep2.jsx";
+import { IntroStep3 } from "./intro-exit/IntroStep3.jsx";
+import { IntroStep45 } from "./intro-exit/IntroStep45.jsx";
+import { IntroStep6 } from "./intro-exit/IntroStep6.jsx";
 
 // Generate random 20-character alphanumeric string
 function generateParticipantKey() {
@@ -20,12 +29,16 @@ function generateParticipantKey() {
 export default function App() {
   const urlParams = new URLSearchParams(window.location.search);
   const playerKey = urlParams.get("participantKey") || "";
+  const k = urlParams.get("k") || "";
+  const skipIntro = urlParams.get("skipIntro") || false;
 
-  // If no participantKey, generate one and redirect
+  // If no participantKey, generate one along with a random gender and redirect
   useEffect(() => {
     if (!playerKey) {
       const newKey = generateParticipantKey();
+      const randomGender = Math.random() < 0.5 ? "M" : "F";
       urlParams.set("participantKey", newKey);
+      urlParams.set("k", randomGender+"x0r8f9");
       const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
       window.location.replace(newUrl);
     }
@@ -35,18 +48,20 @@ export default function App() {
   const url = `${protocol}//${host}/query`;
 
   function introSteps({ game, player }) {
-    return [Introduction];
+    if(skipIntro) return [IntroStep0];
+
+    return [IntroStep0, IntroStep1, IntroStep2, IntroStep3, IntroStep45, IntroStep6];
   }
 
   function exitSteps({ game, player }) {
-    return [ExitSurvey];
+    return [ExitStep1, ExitStep2, SubmitPage, ExitSurvey];
   }
 
   return (
     <EmpiricaParticipant url={url} ns={playerKey} modeFunc={EmpiricaClassic}>
       <div className="h-screen relative">
         <EmpiricaMenu position="bottom-left" />
-        <div className="h-full overflow-hidden">
+        <div className="h-full overflow-auto">
           <EmpiricaContext playerCreate={AutoPlayerIdForm} introSteps={introSteps} exitSteps={exitSteps}>
             <Game />
           </EmpiricaContext>

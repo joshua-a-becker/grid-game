@@ -1,4 +1,5 @@
 import { ClassicListenersCollector } from "@empirica/core/admin/classic";
+import { taskDescription } from "../../clues.js";
 export const Empirica = new ClassicListenersCollector();
 
 // Store context reference for polling
@@ -50,6 +51,7 @@ Empirica.on("batch", "status", async (ctx, { batch }) => {
 
 // Assign players to the waiting game so they can see the intro
 Empirica.on("player", async (ctx, { player }) => {
+  console.log("new player")
   // Start polling on first player connection
   if (!pollingStarted) {
     globalCtx = ctx;
@@ -146,7 +148,7 @@ Empirica.on("player", "introDone", async (ctx, { player }) => {
 });
 
 // Also trigger assignment when gender is set
-Empirica.on("player", "gender", async (ctx, { player }) => {
+Empirica.on("playerX", "gender", async (ctx, { player }) => {
   const gender = player.get("gender");
   const introDone = player.get("introDone");
 
@@ -212,7 +214,7 @@ export async function tryAssignPlayers(ctx) {
     console.log(`  Game ${g.id}: hasStarted=${g.get("hasStarted")}, hasEnded=${g.get("hasEnded")}, players=${g.players.length}`);
   });
 
-  let roleACounts = { male: 0, female: 0, other: 0 };
+  let roleACounts = { M: 0, F: 0, O: 0 };
 
   for (const game of completedGames) {
     console.log(`[ASSIGNMENT] Counting roles in game ${game.id} with ${game.players.length} players`);
@@ -221,28 +223,28 @@ export async function tryAssignPlayers(ctx) {
       const gender = player.get("gender");
       console.log(`  Player ${player.id}: role=${role}, gender=${gender}`);
       if (role === "A") {
-        if (gender === "male") roleACounts.male++;
-        else if (gender === "female") roleACounts.female++;
-        else if (gender === "other") roleACounts.other++;
+        if (gender === "M") roleACounts.M++;
+        else if (gender === "F") roleACounts.F++;
+        else if (gender === "O") roleACounts.O++;
       }
     }
   }
 
-  console.log(`[ASSIGNMENT] Role A counts across ${completedGames.length} games - Male: ${roleACounts.male}, Female: ${roleACounts.female}, Other: ${roleACounts.other}`);
+  console.log(`[ASSIGNMENT] Role A counts across ${completedGames.length} games - M: ${roleACounts.M}, F: ${roleACounts.F}, O: ${roleACounts.O}`);
 
   // Determine most over-represented gender in Role A
   // Always select one, even if all equal (never truly balanced)
   // Tie-breaking preference: male > female > other
-  const maxCount = Math.max(roleACounts.male, roleACounts.female, roleACounts.other);
+  const maxCount = Math.max(roleACounts.M, roleACounts.F, roleACounts.O);
   const gendersWithMax = Object.entries(roleACounts).filter(([_, count]) => count === maxCount).map(([g, _]) => g);
 
   let mostOverrepresented;
-  if (gendersWithMax.includes("male")) {
-    mostOverrepresented = "male";
-  } else if (gendersWithMax.includes("female")) {
-    mostOverrepresented = "female";
+  if (gendersWithMax.includes("M")) {
+    mostOverrepresented = "M";
+  } else if (gendersWithMax.includes("F")) {
+    mostOverrepresented = "F";
   } else {
-    mostOverrepresented = "other";
+    mostOverrepresented = "O";
   }
 
   const isBalanced = false; // Never balanced - always enforce constraint
@@ -251,9 +253,9 @@ export async function tryAssignPlayers(ctx) {
 
   // Group waiting players by gender
   const genderGroups = {
-    male: waitingPlayers.filter(p => p.get("gender") === "male"),
-    female: waitingPlayers.filter(p => p.get("gender") === "female"),
-    other: waitingPlayers.filter(p => p.get("gender") === "other"),
+    M: waitingPlayers.filter(p => p.get("gender") === "M"),
+    F: waitingPlayers.filter(p => p.get("gender") === "F"),
+    O: waitingPlayers.filter(p => p.get("gender") === "O"),
   };
 
   let selectedPlayers = [];
@@ -264,7 +266,7 @@ export async function tryAssignPlayers(ctx) {
 
   // Find non-over-represented genders with at least 2 players
   // Prioritize most underrepresented (lowest count in Role A)
-  const nonOverrepGenders = ["male", "female", "other"]
+  const nonOverrepGenders = ["M", "F", "O"]
     .filter(g => g !== mostOverrepresented)
     .sort((a, b) => roleACounts[a] - roleACounts[b]); // Sort ascending by count
 
@@ -367,6 +369,13 @@ export async function tryAssignPlayers(ctx) {
 }
 
 Empirica.onGameStart(({ game }) => {
+
+  const interactionDuration = game.get("treatment")?.interactionDuration || 900
+  const prepStageDuration = game.get("treatment")?.prepStageDuration || 300
+
+  // Set task description on game
+  game.set("taskDescription", taskDescription);
+
   // Assign roles to players based on stored roleAGender
   const roleAGender = game.get("roleAGender");
   const players = game.players;
@@ -380,33 +389,44 @@ Empirica.onGameStart(({ game }) => {
     console.log(`[GAME START] WARNING: Role assignment mismatch - ${roleAPlayers.length} A, ${roleBPlayers.length} B`);
   }
 
-  // Assign Role A with clues
+  // Randomly assign red/blue to Role B players (one gets red, one gets blue)
+  const roleBColors = Math.random() < 0.5 ? ["red", "blue"] : ["blue", "red"];
+
+  // Randomly assign H/L conditions to Role A players (one gets H, one gets L)
+  const roleAConditions = Math.random() < 0.5 ? ["H", "L"] : ["L", "H"];
+
+  // Assign Role A with GREEN file and clues
   roleAPlayers.forEach((player, index) => {
     const playerNumber = index + 1; // 1 or 2
+    const condition = roleAConditions[index]; // H or L
     player.set("playerNumber", playerNumber);
     player.set("role", "A");
     player.set("playerType", "A");
+    player.set("fileColor", "green");
+    player.set("condition", condition);
 
-    // Assign clues based on player number
-    // Player 1 (Role A): clues 1-4
-    // Player 2 (Role A): clues 5-8
-    const clueIds = playerNumber === 1 ? [1, 2, 3, 4] : [5, 6, 7, 8];
-    player.set("clues", clueIds);
+    // Both Role A players get green clues (9-12)
+    player.set("clues", [13, 14, 15, 16, 17, 18]);
 
-    console.log(`[GAME START] Assigned role A to player ${player.id} (gender: ${player.get("gender")})`);
+    console.log(`[GAME START] Assigned role A (GREEN file, condition ${condition}) to player ${player.id} (gender: ${player.get("gender")})`);
   });
 
-  // Assign Role B with clues
+  // Assign Role B with RED or BLUE file and clues
   roleBPlayers.forEach((player, index) => {
     const playerNumber = index + 3; // 3 or 4
+    const fileColor = roleBColors[index]; // red or blue
     player.set("playerNumber", playerNumber);
     player.set("role", "B");
     player.set("playerType", "B");
+    player.set("fileColor", fileColor);
+    player.set("condition", "C");
 
-    // Both Role B players get same clues 9-12
-    player.set("clues", [9, 10, 11, 12]);
+    // Assign clues based on color
+    // Red: clues 1-4, Blue: clues 5-8
+    const clueIds = fileColor === "red" ? [1, 2, 3, 4, 5, 6] : [7, 8, 9, 10, 11, 12];
+    player.set("clues", clueIds);
 
-    console.log(`[GAME START] Assigned role B to player ${player.id} (gender: ${player.get("gender")})`);
+    console.log(`[GAME START] Assigned role B (${fileColor} file, condition C) to player ${player.id} (gender: ${player.get("gender")})`);
   });
 
   // Set up cross-type chat peers for each player
@@ -423,8 +443,8 @@ Empirica.onGameStart(({ game }) => {
     name: "Consulting Task",
     task: "consulting",
   });
-  round.addStage({ name: "Discussion", duration: 3000 });
-  round.addStage({ name: "Submit", duration: 120 });
+  round.addStage({name: "Preparation", duration: prepStageDuration });
+  round.addStage({ name: "Discussion", duration: interactionDuration });
 });
 
 Empirica.onRoundStart(() => {});

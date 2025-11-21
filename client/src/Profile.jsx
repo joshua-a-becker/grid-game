@@ -1,5 +1,6 @@
 import {
   usePlayer,
+  useGame,
   useRound,
   useStage,
 } from "@empirica/core/player/classic/react";
@@ -9,11 +10,13 @@ import { Timer } from "./components/Timer.jsx";
 
 export function Profile() {
   const player = usePlayer();
+  const game = useGame();
   const round = useRound();
   const stage = useStage();
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
   const score = player.get("score") || 0;
+  const taskDescription = game?.get("taskDescription") || "";
 
   // Dev mode skip stage handler
   const handleSkipStage = () => {
@@ -66,8 +69,8 @@ export function Profile() {
               ✖
             </button>
             <h2 className="text-lg font-bold mb-4">Task Description</h2>
-            <div className="text-gray-700 space-y-4">
-              <p>(task description goes here)</p>
+            <div className="text-gray-700 space-y-4 whitespace-pre-wrap">
+              {taskDescription}
             </div>
           </div>
         </div>

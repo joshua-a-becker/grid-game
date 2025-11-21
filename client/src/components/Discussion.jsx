@@ -1,27 +1,41 @@
-import React, { useState } from "react";
-import { usePlayer, usePlayers } from "@empirica/core/player/classic/react";
-import { clues, sharedClues } from "../../../clues.js";
+import React, { useState, useRef } from "react";
+import { usePlayer, usePlayers, useGame } from "@empirica/core/player/classic/react";
+import { cluesByColor, sharedClues } from "../../../clues.js";
 import { Timer } from "./Timer.jsx";
+import { DyadicChat } from "./DyadicChat.jsx";
 
 export function Discussion() {
   const player = usePlayer();
   const players = usePlayers();
+  const game = useGame();
   const [activeTab, setActiveTab] = useState("information");
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [wobblingClues, setWobblingClues] = useState({});
 
-  const myPlayerNumber = player.get("playerNumber");
+  const myFileColor = player.get("fileColor");
   const myClueIds = player.get("clues") || [];
+  const myPlayerNumber = player.get("playerNumber");
+  const chatPeers = player.get("chatPeers") || [];
 
-  // Define the three clue sets with their team colors
-  const clueSets = [
-    { name: "Red", clueIds: [1, 2, 3, 4] },
-    { name: "Blue", clueIds: [5, 6, 7, 8] },
-    { name: "Green", clueIds: [9, 10, 11, 12] }
-  ];
+  // Handle skip stage (dev only)
+  const handleSkipStage = () => {
+    player.stage.set("submit", true);
+  };
 
-  // Create a map of clue id to clue object
+  // Get chat peer numbers from player IDs
+  const getChatPeerNumbers = () => {
+    return chatPeers.map(peerId => {
+      const peer = players.find(p => p.id === peerId);
+      return peer ? peer.get("playerNumber") : null;
+    }).filter(num => num !== null);
+  };
+
+  // Define the three file colors in order
+  const fileColors = ["red", "blue", "green"];
+
+  // Create a map of clue id to clue object from all colors
   const clueMap = {};
-  clues.forEach((clue) => {
+  Object.values(cluesByColor).flat().forEach((clue) => {
     clueMap[clue.id] = clue;
   });
 
@@ -37,11 +51,54 @@ export function Discussion() {
   const handleInputChange = (clueId, value, element) => {
     player.set(`clueResponse_${clueId}`, value);
     autoResizeTextarea(element);
+    initiateWobble();
   };
 
+  // Handle source change for non-owned clues
+  const handleSourceChange = (clueId, source) => {
+    player.set(`clueSource_${clueId}`, source);
+    initiateWobble();
+  };
+
+  // Set up wobble effect for enabled dropdowns with no selection
+  const intervalsRef = useRef({});
+
+  const initiateWobble = () => {
+    // cleanup previous intervals
+    Object.values(intervalsRef.current).forEach(clearInterval);
+    intervalsRef.current = {};
+
+    const allClues = Object.values(cluesByColor).flat();
+    const nonOwnedClues = allClues.filter(c => !myClueIds.includes(c.id));
+
+    nonOwnedClues.forEach(clue => {
+      const hasResponse = (player.get(`clueResponse_${clue.id}`) || "").trim() !== "";
+      const hasSource   = player.get(`clueSource_${clue.id}`) || "";
+
+      if (hasResponse && !hasSource) {
+        
+          setTimeout(() => {
+            setWobblingClues(p => ({ ...p, [clue.id]: true }));
+            setTimeout(() => {
+              setWobblingClues(p => ({ ...p, [clue.id]: false }));
+            }, 500);
+          }, 800);
+        intervalsRef.current[clue.id] = setInterval(() => {
+          setWobblingClues(p => ({ ...p, [clue.id]: true }));
+          setTimeout(() => {
+            setWobblingClues(p => ({ ...p, [clue.id]: false }));
+          }, 500);
+        }, 3000);
+      }
+    });
+  };
+
+
   return (
-    <div className="h-full w-full flex flex-col bg-gray-50 overflow-hidden p-4">
-      <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="h-full w-full flex overflow-hidden">
+      {/* Main content area */}
+      <div className="flex-1 flex flex-col bg-gray-50 overflow-hidden p-4">
+        <div className="flex-1 flex flex-col overflow-hidden">
         {/* Tab Navigation */}
         <div className="flex items-center justify-between px-4">
           <div className="flex gap-1">
@@ -75,6 +132,12 @@ export function Discussion() {
             >
               Task Description
             </button>
+            <button
+              className="px-6 py-3 font-medium transition-colors rounded-t-lg bg-red-100 hover:bg-red-200 text-red-600"
+              onClick={handleSkipStage}
+            >
+              [DEV] Skip Stage
+            </button>
           </div>
           <Timer />
         </div>
@@ -106,29 +169,32 @@ export function Discussion() {
         }}>
         {activeTab === "information" && (
           <div className="grid grid-cols-3 gap-4">
-            {clueSets.map((clueSet) => {
-              const isMyClueSet = clueSet.clueIds.some(id => myClueIds.includes(id));
+            {fileColors.map((color) => {
+              const isMyFile = color === myFileColor;
+              const colorClues = cluesByColor[color];
 
               return (
-                <div key={clueSet.name} className="flex flex-col gap-4">
+                <div key={color} className="flex flex-col gap-4">
                   {/* Column Header */}
-                  <div className={`rounded-lg p-4 ${isMyClueSet ? 'bg-blue-600' : 'bg-gray-700'} text-white`}>
-                    <h3 className="font-semibold text-lg">
-                      {clueSet.name} File
-                      {isMyClueSet && " (You)"}
+                  <div className={`rounded-lg p-4 ${isMyFile ? 'bg-blue-600' : 'bg-gray-700'} text-white`}>
+                    <h3 className="font-semibold text-lg capitalize">
+                      {color} File
+                      {isMyFile && "(You)"}
                     </h3>
                   </div>
 
                   {/* Clue Cards */}
-                  {clueSet.clueIds.map((clueId) => {
-                    const clue = clueMap[clueId];
-                    if (!clue) return null;
-
-                    const isMyClue = myClueIds.includes(clueId);
+                  {colorClues.map((clue) => {
+                    const isMyClue = myClueIds.includes(clue.id);
+                    const clueResponse = (player.get(`clueResponse_${clue.id}`) || "").trim();
+                    const hasResponse = clueResponse !== "";
+                    const clueSource = player.get(`clueSource_${clue.id}`) || "";
+                    const isWobbling = wobblingClues[clue.id];
+                    const chatPeerNumbers = getChatPeerNumbers();
 
                     return (
                       <div
-                        key={clueId}
+                        key={clue.id}
                         className={`bg-white rounded-lg shadow-sm p-4 border-2 ${
                           isMyClue ? 'border-blue-200' : 'border-gray-200'
                         }`}
@@ -144,15 +210,52 @@ export function Discussion() {
                             {clue.response}
                           </div>
                         ) : (
-                          <textarea
-                            value={player.get(`clueResponse_${clueId}`) || ""}
-                            onChange={(e) =>
-                              handleInputChange(clueId, e.target.value, e.target)
-                            }
-                            placeholder="Enter your answer..."
-                            rows={2}
-                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none overflow-hidden"
-                          />
+                          <div>
+                            <textarea
+                              value={player.get(`clueResponse_${clue.id}`) || ""}
+                              onChange={(e) =>
+                                handleInputChange(clue.id, e.target.value, e.target)
+                              }
+                              placeholder="Enter your answer..."
+                              rows={2}
+                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none overflow-hidden"
+                            />
+                            <div className="mt-2">
+                              <style>{`
+                                @keyframes wobble {
+                                  0%, 100% { transform: rotate(0deg); }
+                                  25% { transform: rotate(-5deg); }
+                                  75% { transform: rotate(5deg); }
+                                }
+
+                                .wobble-animate {
+                                  animation: wobble 0.2s ease-in-out;
+                                  display: inline-block; /* required so rotation works cleanly */
+                                }
+                              `}</style>
+                              <label className={`block text-xs mb-1 ${
+                                hasResponse && !clueSource ? 'text-red-700 font-bold' : hasResponse ? 'text-gray-700 font-medium' : 'text-gray-400 font-medium'
+                              }`}>
+                                Who did you hear this from?
+                              </label>
+                              <select
+                                value={clueSource}
+                                onChange={(e) => handleSourceChange(clue.id, e.target.value)}
+                                disabled={!hasResponse}
+                                className={`w-full px-3 py-2 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                                  hasResponse ? 'border-gray-300 bg-white text-gray-900' : 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
+                                } ${isWobbling ? 'wobble-animate' : ''}`}
+                              >
+                                <option value="">Select consultant...</option>
+                                {chatPeerNumbers.map((num) => (
+                                  <option key={num} value={num}>
+                                    Consultant {num}
+                                  </option>
+                                ))}
+                                <option value="unsure">I'm not sure</option>
+                              </select>
+                            </div>
+                          </div>
                         )}
                       </div>
                     );
@@ -191,8 +294,8 @@ export function Discussion() {
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 Task Description
               </h2>
-              <div className="text-gray-700 space-y-4">
-                <p>(task description goes here)</p>
+              <div className="text-gray-700 space-y-4 whitespace-pre-wrap">
+                {game?.get("taskDescription") || ""}
               </div>
             </div>
           </div>
@@ -202,6 +305,12 @@ export function Discussion() {
         {/* Bottom fade gradient */}
         <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none z-10"></div>
       </div>
+      </div>
+      </div>
+
+      {/* Chat sidebar */}
+      <div className="h-full w-128">
+        <DyadicChat />
       </div>
     </div>
   );

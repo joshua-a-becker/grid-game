@@ -61,7 +61,7 @@ export function DyadicChat() {
     const newMessage = {
       id: `${Date.now()}_${Math.random()}`,
       senderId: player.id,
-      senderName: `Player ${myPlayerNumber}`,
+      senderName: `Consultant ${myPlayerNumber}`,
       text: messageInput.trim(),
       timestamp: Date.now(),
     };

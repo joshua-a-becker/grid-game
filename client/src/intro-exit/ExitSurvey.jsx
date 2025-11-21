@@ -11,9 +11,7 @@ export function ExitSurvey({ next }) {
 
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
-  const [strength, setStrength] = useState("");
-  const [fair, setFair] = useState("");
-  const [feedback, setFeedback] = useState("");
+  const [race, setRace] = useState("");
   const [education, setEducation] = useState("");
 
   function handleSubmit(event) {
@@ -21,9 +19,7 @@ export function ExitSurvey({ next }) {
     player.set("exitSurvey", {
       age,
       gender,
-      strength,
-      fair,
-      feedback,
+      race,
       education,
     });
     next();
@@ -63,9 +59,9 @@ export function ExitSurvey({ next }) {
             </div>
 
             <div className="space-y-8 mt-6">
-              <div className="flex flex-row">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="email" className={labelClassName}>
+                  <label htmlFor="age" className={labelClassName}>
                     Age
                   </label>
                   <div className="mt-1">
@@ -80,8 +76,8 @@ export function ExitSurvey({ next }) {
                     />
                   </div>
                 </div>
-                <div className="ml-5">
-                  <label htmlFor="email" className={labelClassName}>
+                <div>
+                  <label htmlFor="gender" className={labelClassName}>
                     Gender
                   </label>
                   <div className="mt-1">
@@ -92,6 +88,21 @@ export function ExitSurvey({ next }) {
                       className={inputClassName}
                       value={gender}
                       onChange={(e) => setGender(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="race" className={labelClassName}>
+                    Race
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      id="race"
+                      name="race"
+                      autoComplete="off"
+                      className={inputClassName}
+                      value={race}
+                      onChange={(e) => setRace(e.target.value)}
                     />
                   </div>
                 </div>
@@ -131,50 +142,6 @@ export function ExitSurvey({ next }) {
                     onChange={handleEducationChange}
                   />
                 </div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-x-6 gap-y-3">
-                <label className={labelClassName}>
-                  How would you describe your strength in the game?
-                </label>
-
-                <label className={labelClassName}>
-                  Do you feel the pay was fair?
-                </label>
-
-                <label className={labelClassName}>
-                  Feedback, including problems you encountered.
-                </label>
-
-                <textarea
-                  className={inputClassName}
-                  dir="auto"
-                  id="strength"
-                  name="strength"
-                  rows={4}
-                  value={strength}
-                  onChange={(e) => setStrength(e.target.value)}
-                />
-
-                <textarea
-                  className={inputClassName}
-                  dir="auto"
-                  id="fair"
-                  name="fair"
-                  rows={4}
-                  value={fair}
-                  onChange={(e) => setFair(e.target.value)}
-                />
-
-                <textarea
-                  className={inputClassName}
-                  dir="auto"
-                  id="feedback"
-                  name="feedback"
-                  rows={4}
-                  value={feedback}
-                  onChange={(e) => setFeedback(e.target.value)}
-                />
               </div>
 
               <div className="mb-12">
