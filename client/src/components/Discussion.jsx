@@ -135,12 +135,14 @@ export function Discussion() {
             >
               Task Description
             </button>
-            <button
-              className="px-6 py-3 font-medium transition-colors rounded-t-lg bg-red-100 hover:bg-red-200 text-red-600"
-              onClick={handleSkipStage}
-            >
-              [DEV] Skip Stage
-            </button>
+            {process.env.NODE_ENV === 'development' && (
+              <button
+                className="px-6 py-3 font-medium transition-colors rounded-t-lg bg-red-100 hover:bg-red-200 text-red-600"
+                onClick={handleSkipStage}
+              >
+                [DEV] Skip Stage
+              </button>
+            )}
           </div>
           <Timer />
         </div>

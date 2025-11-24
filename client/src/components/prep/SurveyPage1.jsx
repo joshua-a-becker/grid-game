@@ -92,9 +92,9 @@ export function SurveyPage1({ onNext }) {
                     This is a required item
                   </p>
                 )}
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-700 mr-4">STRONGLY DISAGREE</span>
-                  <div className="flex justify-center gap-8 flex-1">
+                <div className="flex items-center justify-between w-full">
+                  <span className="text-sm font-medium text-gray-700 flex-shrink-0">STRONGLY DISAGREE</span>
+                  <div className="flex justify-between items-center flex-1 px-8">
                     {[1, 2, 3, 4, 5, 6].map((value) => (
                       <label key={value} className="flex flex-col items-center cursor-pointer">
                         <input
@@ -109,7 +109,7 @@ export function SurveyPage1({ onNext }) {
                       </label>
                     ))}
                   </div>
-                  <span className="text-sm font-medium text-gray-700 ml-4">STRONGLY AGREE</span>
+                  <span className="text-sm font-medium text-gray-700 flex-shrink-0">STRONGLY AGREE</span>
                 </div>
               </div>
             );

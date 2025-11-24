@@ -68,9 +68,9 @@ export function ExitStep1({ next }) {
                   This is a required item
                 </p>
               )}
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Strongly disagree</span>
-                <div className="flex gap-4">
+              <div className="flex justify-between items-center w-full">
+                <span className="text-sm text-gray-600 flex-shrink-0">Strongly disagree</span>
+                <div className="flex justify-between items-center flex-1 px-8">
                   {[1, 2, 3, 4, 5, 6, 7].map((value) => (
                     <label key={value} className="flex flex-col items-center cursor-pointer">
                       <span className="text-sm text-gray-700 mb-1">{value}</span>
@@ -85,7 +85,7 @@ export function ExitStep1({ next }) {
                     </label>
                   ))}
                 </div>
-                <span className="text-sm text-gray-600">Strongly agree</span>
+                <span className="text-sm text-gray-600 flex-shrink-0">Strongly agree</span>
               </div>
             </div>
           ))}

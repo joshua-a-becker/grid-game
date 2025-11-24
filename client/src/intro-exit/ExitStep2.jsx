@@ -1,15 +1,35 @@
-import { usePlayer } from "@empirica/core/player/classic/react";
+import { usePlayer, usePlayers } from "@empirica/core/player/classic/react";
 import React, { useState } from "react";
 import { Button } from "../components/Button.jsx";
 
 export function ExitStep2({ next }) {
   const player = usePlayer();
-  const [answers, setAnswers] = useState({
-    consultant1_goBetween: "",
-    consultant1_gatekeeper: "",
-    consultant2_goBetween: "",
-    consultant2_gatekeeper: ""
+  const players = usePlayers();
+
+  // Get chat peer numbers
+  const chatPeers = player.get("chatPeers") || [];
+  const chatPeerNumbers = chatPeers
+    .map(peerId => {
+      const peer = players.find(p => p.id === peerId);
+      return peer ? peer.get("playerNumber") : null;
+    })
+    .filter(num => num !== null)
+    .sort((a, b) => a - b);
+
+  // Create consultants array based on actual chat peers
+  const consultants = chatPeerNumbers.map((num, index) => ({
+    id: `consultant${num}`,
+    label: `Consultant ${num}`
+  }));
+
+  // Initialize state with dynamic keys based on actual consultants
+  const initialAnswers = {};
+  consultants.forEach(consultant => {
+    initialAnswers[`${consultant.id}_goBetween`] = "";
+    initialAnswers[`${consultant.id}_gatekeeper`] = "";
   });
+
+  const [answers, setAnswers] = useState(initialAnswers);
   const [showValidation, setShowValidation] = useState(false);
 
   const handleSubmit = () => {
@@ -21,11 +41,6 @@ export function ExitStep2({ next }) {
     player.set("brokeragePeer", answers);
     next();
   };
-
-  const consultants = [
-    { id: "consultant1", label: "Consultant 1" },
-    { id: "consultant2", label: "Consultant 2" }
-  ];
 
   const questions = [
     {
@@ -68,9 +83,9 @@ export function ExitStep2({ next }) {
                         This is a required item
                       </p>
                     )}
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Strongly disagree</span>
-                      <div className="flex gap-4">
+                    <div className="flex justify-between items-center w-full">
+                      <span className="text-sm text-gray-600 flex-shrink-0">Strongly disagree</span>
+                      <div className="flex justify-between items-center flex-1 px-8">
                         {[1, 2, 3, 4, 5, 6, 7].map((value) => (
                           <label key={value} className="flex flex-col items-center cursor-pointer">
                             <span className="text-sm text-gray-700 mb-1">{value}</span>
@@ -85,7 +100,7 @@ export function ExitStep2({ next }) {
                           </label>
                         ))}
                       </div>
-                      <span className="text-sm text-gray-600">Strongly agree</span>
+                      <span className="text-sm text-gray-600 flex-shrink-0">Strongly agree</span>
                     </div>
                   </div>
                 );
