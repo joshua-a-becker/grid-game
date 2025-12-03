@@ -2,7 +2,7 @@ import { usePlayer, usePlayers } from "@empirica/core/player/classic/react";
 import React, { useState } from "react";
 import { Button } from "../components/Button.jsx";
 
-export function ExitStep2({ next }) {
+export function ExitStep3({ next }) {
   const player = usePlayer();
   const players = usePlayers();
 
@@ -25,8 +25,12 @@ export function ExitStep2({ next }) {
   // Initialize state with dynamic keys based on actual consultants
   const initialAnswers = {};
   consultants.forEach(consultant => {
-    initialAnswers[`${consultant.id}_goBetween`] = "";
-    initialAnswers[`${consultant.id}_gatekeeper`] = "";
+    initialAnswers[`${consultant.id}_warm`] = "";
+    initialAnswers[`${consultant.id}_trustworthy`] = "";
+    initialAnswers[`${consultant.id}_friendly`] = "";
+    initialAnswers[`${consultant.id}_honest`] = "";
+    initialAnswers[`${consultant.id}_likeable`] = "";
+    initialAnswers[`${consultant.id}_sincere`] = "";
   });
 
   const [answers, setAnswers] = useState(initialAnswers);
@@ -44,12 +48,28 @@ export function ExitStep2({ next }) {
 
   const questions = [
     {
-      suffix: "_goBetween",
-      text: (consultant) => `During the activity, ${consultant} worked as a "go-between" for others I could not interact directly with.`
+      suffix: "_warm",
+      text: (consultant) => `${consultant} was warm`
     },
     {
-      suffix: "_gatekeeper",
-      text: (consultant) => `During the activity, ${consultant} acted as a gatekeeper, controlling the flow of information from others I could not interact directly with.`
+      suffix: "_trustworthy",
+      text: (consultant) => `${consultant} was trustworthy`
+    },
+    {
+      suffix: "_friendly",
+      text: (consultant) => `${consultant} was friendly`
+    },
+    {
+      suffix: "_honest",
+      text: (consultant) => `${consultant} was honest`
+    },
+    {
+      suffix: "_likeable",
+      text: (consultant) => `${consultant} was likeable`
+    },
+    {
+      suffix: "_sincere",
+      text: (consultant) => `${consultant} was sincere`
     }
   ];
 
@@ -58,7 +78,7 @@ export function ExitStep2({ next }) {
       <div className="mt-12 space-y-8">
         <div>
           <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Feedback on Other Consultants (Part 1)
+            Feedback on Other Consultants (Part 2)
           </h3>
           <p className="mt-1 text-sm text-gray-500">
             Please indicate the extent to which you agree or disagree with the following statements. (1 = Strongly disagree, 7 = Strongly agree)

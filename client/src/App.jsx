@@ -6,6 +6,8 @@ import { Game } from "./Game.jsx";
 import { ExitSurvey } from "./intro-exit/ExitSurvey.jsx";
 import { ExitStep1 } from "./intro-exit/ExitStep1.jsx";
 import { ExitStep2 } from "./intro-exit/ExitStep2.jsx";
+import { ExitStep3 } from "./intro-exit/ExitStep3.jsx";
+import { ExitStep4 } from "./intro-exit/ExitStep4.jsx";
 import { SubmitPage } from "./intro-exit/SubmitPage.jsx";
 import { NoGameExitStep } from "./intro-exit/NoGameExitStep.jsx";
 import { GameFinished }  from "./intro-exit/GameFinished.jsx";
@@ -66,7 +68,7 @@ export default function App() {
     }
 
     // Normal exit steps for players who completed the game
-    return [ExitStep1, ExitStep2, SubmitPage, ExitSurvey, GameFinished ];
+    return [ExitStep1, ExitStep2, ExitStep3, ExitStep4, SubmitPage, ExitSurvey, GameFinished ];
   }
 
   return (

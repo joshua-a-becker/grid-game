@@ -2,7 +2,7 @@ import { usePlayer, usePlayers } from "@empirica/core/player/classic/react";
 import React, { useState } from "react";
 import { Button } from "../components/Button.jsx";
 
-export function ExitStep2({ next }) {
+export function ExitStep4({ next }) {
   const player = usePlayer();
   const players = usePlayers();
 
@@ -25,8 +25,12 @@ export function ExitStep2({ next }) {
   // Initialize state with dynamic keys based on actual consultants
   const initialAnswers = {};
   consultants.forEach(consultant => {
-    initialAnswers[`${consultant.id}_goBetween`] = "";
-    initialAnswers[`${consultant.id}_gatekeeper`] = "";
+    initialAnswers[`${consultant.id}_competent`] = "";
+    initialAnswers[`${consultant.id}_intelligent`] = "";
+    initialAnswers[`${consultant.id}_skilled`] = "";
+    initialAnswers[`${consultant.id}_efficient`] = "";
+    initialAnswers[`${consultant.id}_assertive`] = "";
+    initialAnswers[`${consultant.id}_confident`] = "";
   });
 
   const [answers, setAnswers] = useState(initialAnswers);
@@ -44,12 +48,28 @@ export function ExitStep2({ next }) {
 
   const questions = [
     {
-      suffix: "_goBetween",
-      text: (consultant) => `During the activity, ${consultant} worked as a "go-between" for others I could not interact directly with.`
+      suffix: "_competent",
+      text: (consultant) => `${consultant} was competent`
     },
     {
-      suffix: "_gatekeeper",
-      text: (consultant) => `During the activity, ${consultant} acted as a gatekeeper, controlling the flow of information from others I could not interact directly with.`
+      suffix: "_intelligent",
+      text: (consultant) => `${consultant} was intelligent`
+    },
+    {
+      suffix: "_skilled",
+      text: (consultant) => `${consultant} was skilled`
+    },
+    {
+      suffix: "_efficient",
+      text: (consultant) => `${consultant} was efficient`
+    },
+    {
+      suffix: "_assertive",
+      text: (consultant) => `${consultant} was assertive`
+    },
+    {
+      suffix: "_confident",
+      text: (consultant) => `${consultant} was confident`
     }
   ];
 
@@ -58,7 +78,7 @@ export function ExitStep2({ next }) {
       <div className="mt-12 space-y-8">
         <div>
           <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Feedback on Other Consultants (Part 1)
+            Feedback on Other Consultants (Part 3)
           </h3>
           <p className="mt-1 text-sm text-gray-500">
             Please indicate the extent to which you agree or disagree with the following statements. (1 = Strongly disagree, 7 = Strongly agree)

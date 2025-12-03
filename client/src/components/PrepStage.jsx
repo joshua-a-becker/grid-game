@@ -30,8 +30,6 @@ export function PrepStage() {
   const pages = [
     <PrivateInfoPage key="private" onNext={() => goToPage(1)} />,
     <ManipulationPage key="manipulation" onNext={() => goToPage(2)} />,
-    <SurveyPage1 key="survey1" onNext={() => goToPage(3)} />,
-    <SurveyPage2 key="survey2" onNext={() => goToPage(4)} />,
     <PreGroupInstructions key="instructions" />
   ];
 
