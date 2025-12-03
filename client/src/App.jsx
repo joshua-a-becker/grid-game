@@ -7,6 +7,8 @@ import { ExitSurvey } from "./intro-exit/ExitSurvey.jsx";
 import { ExitStep1 } from "./intro-exit/ExitStep1.jsx";
 import { ExitStep2 } from "./intro-exit/ExitStep2.jsx";
 import { SubmitPage } from "./intro-exit/SubmitPage.jsx";
+import { NoGameExitStep } from "./intro-exit/NoGameExitStep.jsx";
+import { GameFinished }  from "./intro-exit/GameFinished.jsx";
 import { Introduction } from "./intro-exit/Introduction.jsx";
 import { AutoPlayerIdForm } from "./intro-exit/AutoPlayerIdForm.jsx";
 import { IntroStep0 } from "./intro-exit/IntroStep0.jsx";
@@ -55,7 +57,16 @@ export default function App() {
   }
 
   function exitSteps({ game, player }) {
-    return [ExitStep1, ExitStep2, SubmitPage, ExitSurvey];
+    const endedReason = player?.get("ended");
+
+    // Check if player failed to be assigned to a game
+    if (endedReason === "lobby timed out" || endedReason === "No games available") {
+      // Return different exit steps for players who didn't get into a game
+      return [NoGameExitStep];
+    }
+
+    // Normal exit steps for players who completed the game
+    return [ExitStep1, ExitStep2, SubmitPage, ExitSurvey, GameFinished ];
   }
 
   return (

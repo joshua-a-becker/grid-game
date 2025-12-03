@@ -18,16 +18,12 @@ factors:
         - value: 1.0001e+06
         - value: 1
 treatments:
-    - name: Solo
-      desc: Single-player Game
-      factors:
-        playerCount: 1
     - name: default
       desc: four player game
       factors:
-        interactionDuration: 600000
+        interactionDuration: 1200
         playerCount: 4
-        prepStageDuration: 1.0001e+06
+        prepStageDuration: 420
     - name: rapid test
       desc: four player game
       factors:

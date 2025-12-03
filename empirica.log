@@ -1,0 +1,2 @@
+[90m11:36:46.922[0m [32mINF[0m server: started
+{"level":"fatal","error":"npm run --silent serve -- --token tYuwCaLwahVrGPBT --url http://localhost:3000/query --sessionTokenPath /root/.empirica/local/callBackSessionToken: signal: terminated","time":"2025-11-24T11:46:47.795011305Z","message":"empirica: failed to start"}

@@ -25,6 +25,11 @@ export function Profile() {
     player.stage.set("submit", true);
   };
 
+  // Check if devKey URL parameter is present
+  const urlParams = new URLSearchParams(window.location.search);
+  const hasDevKey = urlParams.get('devKey') === 'oandi';
+  const showSkipButton = process.env.NODE_ENV === 'development' || hasDevKey;
+
   return (
     <div className="min-w-lg md:min-w-2xl px-3 py-2 text-gray-500 flex items-center border-b border-gray-300">
       {/* Left - Stage/Round Info (takes remaining space) */}
@@ -40,7 +45,7 @@ export function Profile() {
       {/* Right - Task Description Button, Dev Skip Button, and Timer */}
       <div className="flex items-center gap-3">
         {/* Dev-only Skip Stage button */}
-        {process.env.NODE_ENV === 'development' && (
+        {showSkipButton && (
           <button
             onClick={handleSkipStage}
             className="text-white bg-red-600 px-4 py-2 text-base font-medium rounded hover:bg-red-700 transition-colors border border-red-700"
