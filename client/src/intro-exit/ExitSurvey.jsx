@@ -72,6 +72,7 @@ export function ExitSurvey({ next }) {
                     className={inputClassName}
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
+                    required
                   />
                 </div>
               </div>
@@ -87,11 +88,13 @@ export function ExitSurvey({ next }) {
                     className={inputClassName}
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
+                    required
                   >
                     <option value="">Select...</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                     <option value="Non-Binary">Non-Binary</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
                   </select>
                 </div>
               </div>
@@ -107,6 +110,7 @@ export function ExitSurvey({ next }) {
                     className={inputClassName}
                     value={race}
                     onChange={(e) => setRace(e.target.value)}
+                    required
                   >
                     <option value="">Select...</option>
                     <option value="White">White</option>
@@ -132,6 +136,7 @@ export function ExitSurvey({ next }) {
                     value="high-school"
                     label="High School"
                     onChange={handleEducationChange}
+                    required
                   />
                   <Radio
                     selected={education}
@@ -139,6 +144,7 @@ export function ExitSurvey({ next }) {
                     value="bachelor"
                     label="US Bachelor's Degree"
                     onChange={handleEducationChange}
+                    required
                   />
                   <Radio
                     selected={education}
@@ -146,6 +152,7 @@ export function ExitSurvey({ next }) {
                     value="master"
                     label="Master's or higher"
                     onChange={handleEducationChange}
+                    required
                   />
                   <Radio
                     selected={education}
@@ -153,6 +160,7 @@ export function ExitSurvey({ next }) {
                     value="other"
                     label="Other"
                     onChange={handleEducationChange}
+                    required
                   />
                 </div>
               </div>
@@ -168,7 +176,7 @@ export function ExitSurvey({ next }) {
   );
 }
 
-export function Radio({ selected, name, value, label, onChange }) {
+export function Radio({ selected, name, value, label, onChange, required }) {
   return (
     <label className="text-sm font-medium text-gray-700">
       <input
@@ -178,6 +186,7 @@ export function Radio({ selected, name, value, label, onChange }) {
         value={value}
         checked={selected === value}
         onChange={onChange}
+        required={required}
       />
       {label}
     </label>

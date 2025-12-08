@@ -144,26 +144,22 @@ export const sharedClues = [
 
 export const taskDescription = `
         <p style="margin-bottom: 1rem;">
-          You will have 20-minutes to gather information necessary to present a solution for Riverside E-Sports Arena.
+          At the end of this activity, we'll ask you to present a solution for Riverside E-Sports Arena.
         </p>
 
         <p style="margin-bottom: 1rem;">
-          During the group activity phase, you will have the opportunity to chat with two other consultants on your team. These chats are live, are individual direct chats between you and the recipient. There is no "group chat" that includes all consultants.
+          You will be Consultant {PLAYER_NUMBER} for this task. You will have 20 minutes to gather information by chatting with two other consultants via direct message (i.e. not a group chat).
         </p>
 
         <p style="margin-bottom: 1rem;">
-          <strong>You will be Consultant {PLAYER_NUMBER} for this task.</strong>
+          <strong>These two other consultants cannot message each other directly. However, they would be able to communicate to each other through you.</strong>
         </p>
 
         <p style="margin-bottom: 1rem;">
-          Throughout the activity, as you gain additional information, please fill out the Information Table, and note who told you the information that you needed.
+          Every piece of information you gain will help your final recommendation report to Riverside E-Sports Arena. <strong>The person with the best report will receive a bonus payment.</strong>
         </p>
 
         <p style="margin-bottom: 1rem;">
-          As mentioned before, you'll note that the shared information is available on the Shared Information tab.
-        </p>
-
-        <p style="margin-bottom: 1rem;">
-          These instructions will be available on the Task Description tab.
+          As you gain additional information, fill out the Information Table, and note who told you the information that you needed.
         </p>
 `;

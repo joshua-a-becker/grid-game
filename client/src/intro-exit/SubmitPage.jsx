@@ -6,7 +6,6 @@ export function SubmitPage({ next }) {
   const player = usePlayer();
   const game = useGame();
 
-  const [recommendation, setRecommendation] = useState("");
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
   const playerNumber = player.get("playerNumber") || "";
@@ -15,7 +14,6 @@ export function SubmitPage({ next }) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    player.set("recommendation", recommendation);
     next();
   }
 
@@ -28,43 +26,41 @@ export function SubmitPage({ next }) {
           <div className="bg-gray-50 border-b border-gray-200 px-8 py-6 flex items-start justify-between">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">
-                Time to pitch your solution for Riverside E-Sports Arena!
+                <s>Time to pitch your solution!</s>
               </h2>
-              <p className="mt-2 text-gray-600">
-                Please suggest a solution based on all the information you have gathered.
+              <p className="mt-2 text-red-700">
+                <b>A solution is not required for this activity.</b>
               </p>
             </div>
-            <button
+            {/* <button
               onClick={() => setIsTaskModalOpen(true)}
               type="button"
               className="ml-6 flex-shrink-0 bg-gray-200 text-gray-800 px-4 py-2 text-sm font-medium rounded hover:bg-gray-300 transition-colors border border-gray-300"
             >
               Task Description
-            </button>
+            </button> */}
           </div>
 
           {/* Form Content */}
           <form onSubmit={handleSubmit} className="px-8 py-8">
             <div className="space-y-6">
               <div>
-                <label htmlFor="recommendation" className="block text-base font-semibold text-gray-900 mb-3">
-                  Your Recommendation
-                </label>
-                <textarea
-                  className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 text-base resize-none"
-                  dir="auto"
-                  id="recommendation"
-                  name="recommendation"
-                  rows={12}
-                  value={recommendation}
-                  onChange={(e) => setRecommendation(e.target.value)}
-                  placeholder="Enter your recommendation here..."
-                  required
-                />
+                <div
+                  className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 text-base"
+                  style={{ minHeight: '288px' }}
+                >
+                  <p>Thank you for participating in the activity!</p>
+                  <br />
+                  <p>Our primary outcome of interest was information sharing in the discussion that you just completed.</p>
+                  <br />
+                  <p>We are therefore skipping the step where you write a recommendation for Riverside E-Sports Arena.</p>
+                  <br />
+                  <p><b>Instead, <span className="text-red-500">everyone will receive the promised bonus as if they wrote the best report.</span></b></p>
+                </div>
               </div>
 
               <div className="flex justify-end pt-4">
-                <Button type="submit">Submit</Button>
+                <Button type="submit">Finish</Button>
               </div>
             </div>
           </form>

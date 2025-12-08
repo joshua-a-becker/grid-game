@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { usePlayer, usePlayers, useGame } from "@empirica/core/player/classic/react";
+import { usePlayer, usePlayers } from "@empirica/core/player/classic/react";
 
-export function DyadicChat() {
+export function ExitChat() {
   const player = usePlayer();
   const players = usePlayers();
-  const game = useGame();
 
   const myPlayerNumber = player.get("playerNumber");
   const chatPeerIds = player.get("chatPeers") || [];
@@ -19,7 +18,6 @@ export function DyadicChat() {
     otherPlayers.length > 0 ? otherPlayers[0].id : null
   );
 
-  const [messageInput, setMessageInput] = useState("");
   const messagesEndRef = useRef(null);
 
   // Create unique dyad key (always sort player IDs to ensure consistency)
@@ -28,52 +26,14 @@ export function DyadicChat() {
     return `chat_${ids[0]}_${ids[1]}`;
   };
 
-  // Get messages for current dyad
+  // Get messages for current dyad from player data
   const currentDyadKey = activePartnerId ? getDyadKey(activePartnerId) : null;
-  const messages = currentDyadKey ? (game.get(currentDyadKey) || []) : [];
+  const messages = currentDyadKey ? (player.get(currentDyadKey) || []) : [];
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  // Calculate unread count for a specific partner
-  const getUnreadCount = (partnerId) => {
-    // Don't show unread for active tab
-    if (partnerId === activePartnerId) return 0;
-
-    const dyadKey = getDyadKey(partnerId);
-    const dyadMessages = game.get(dyadKey) || [];
-    const timestamps = player.get("chatReadTimestamps") || {};
-    const lastRead = timestamps[dyadKey] || 0;
-
-    return dyadMessages.filter(msg =>
-      msg.senderId !== player.id && msg.timestamp > lastRead
-    ).length;
-  };
-
-  // Send message
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-
-    if (!messageInput.trim() || !activePartnerId) return;
-
-    const newMessage = {
-      id: `${Date.now()}_${Math.random()}`,
-      senderId: player.id,
-      senderName: `Consultant ${myPlayerNumber}`,
-      text: messageInput.trim(),
-      timestamp: Date.now(),
-    };
-
-    const updatedMessages = [...messages, newMessage];
-    game.set(currentDyadKey, updatedMessages);
-
-    // Save chat history to player data
-    player.set(currentDyadKey, updatedMessages);
-
-    setMessageInput("");
-  };
 
   // Get active partner
   const activePartner = otherPlayers.find(p => p.id === activePartnerId);
@@ -93,23 +53,10 @@ export function DyadicChat() {
         <div className="bg-gray-100 border-b border-gray-300 rounded-t-lg">
           <div className="flex">
             {otherPlayers.map((p) => {
-              const unreadCount = getUnreadCount(p.id);
               return (
                 <button
                   key={p.id}
-                  onClick={() => {
-                    // Mark current tab as read before switching
-                    if (activePartnerId) {
-                      const currentDyadKey = getDyadKey(activePartnerId);
-                      const timestamps = player.get("chatReadTimestamps") || {};
-                      player.set("chatReadTimestamps", {
-                        ...timestamps,
-                        [currentDyadKey]: Date.now()
-                      });
-                    }
-                    // Then switch tabs
-                    setActivePartnerId(p.id);
-                  }}
+                  onClick={() => setActivePartnerId(p.id)}
                   className={`flex-1 px-3 py-2 text-sm font-medium transition-colors relative ${
                     activePartnerId === p.id
                       ? "bg-white text-blue-600 border-b-2 border-blue-600"
@@ -117,11 +64,6 @@ export function DyadicChat() {
                   }`}
                 >
                   Consultant {p.get("playerNumber")}
-                  {unreadCount > 0 && (
-                    <span className="absolute top-1 right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                      {unreadCount}
-                    </span>
-                  )}
                 </button>
               );
             })}
@@ -132,7 +74,7 @@ export function DyadicChat() {
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 ? (
           <div className="text-center text-gray-400 mt-8">
-            No messages yet. Start the conversation!
+            No messages in this conversation.
           </div>
         ) : (
           messages.map((msg) => {
@@ -161,24 +103,23 @@ export function DyadicChat() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input area */}
-      <form
-        onSubmit={handleSendMessage}
-        className="border-t border-gray-300 p-4 bg-gray-50"
-      >
+      {/* Disabled Input area */}
+      <div className="border-t border-gray-300 p-4 bg-gray-50">
         <div className="flex gap-2">
           <input
             type="text"
-            value={messageInput}
-            onChange={(e) => setMessageInput(e.target.value)}
-            placeholder={`Message consultant ${activePartner?.get("playerNumber")}...`}
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            value=""
+            disabled
+            placeholder={`Messaging is disabled`}
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-400 cursor-not-allowed"
+            style={{ cursor: 'not-allowed' }}
           />
           <button
-            type="submit"
-            disabled={!messageInput.trim()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-            title="Send message"
+            type="button"
+            disabled
+            className="px-4 py-2 bg-gray-400 text-white rounded-lg cursor-not-allowed"
+            style={{ cursor: 'not-allowed' }}
+            title="Messaging is disabled"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -190,7 +131,7 @@ export function DyadicChat() {
             </svg>
           </button>
         </div>
-      </form>
+      </div>
       </div>
     </div>
   );
