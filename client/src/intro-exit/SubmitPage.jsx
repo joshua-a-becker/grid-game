@@ -26,10 +26,10 @@ export function SubmitPage({ next }) {
           <div className="bg-gray-50 border-b border-gray-200 px-8 py-6 flex items-start justify-between">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">
-                <s>Time to pitch your solution!</s>
+                Time to pitch your solution!
               </h2>
-              <p className="mt-2 text-red-700">
-                <b>A solution is not required for this activity.</b>
+              <p className="mt-2">
+                In the space below, please summarize a recommendation report for Riverside E-Sports Arena. Please utilize the information that you gathered in the group activity to write a helpful report that should help Riverside E-Sports Arena. Completing this recommendation will qualify you for a chance to win a bonus.
               </p>
             </div>
             {/* <button
@@ -45,18 +45,13 @@ export function SubmitPage({ next }) {
           <form onSubmit={handleSubmit} className="px-8 py-8">
             <div className="space-y-6">
               <div>
-                <div
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 text-base"
+                <textarea
+                  className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 text-base resize-none"
                   style={{ minHeight: '288px' }}
-                >
-                  <p>Thank you for participating in the activity!</p>
-                  <br />
-                  <p>Our primary outcome of interest was information sharing in the discussion that you just completed.</p>
-                  <br />
-                  <p>We are therefore skipping the step where you write a recommendation for Riverside E-Sports Arena.</p>
-                  <br />
-                  <p><b>Instead, <span className="text-red-500">everyone will receive the promised bonus as if they wrote the best report.</span></b></p>
-                </div>
+                  placeholder="Enter your submission here..."
+                  value={player.get("submission") || ""}
+                  onChange={(e) => player.set("submission", e.target.value)}
+                />
               </div>
 
               <div className="flex justify-end pt-4">

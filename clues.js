@@ -156,7 +156,7 @@ export const taskDescription = `
         </p>
 
         <p style="margin-bottom: 1rem;">
-          Every piece of information you gain will help your final recommendation report to Riverside E-Sports Arena. <strong>The person with the best report will receive a bonus payment.</strong>
+          Every piece of information you gain will help your final recommendation report to Riverside E-Sports Arena. <strong>Completing the final recommendation report will qualify you for a chance to win a bonus.</strong>
         </p>
 
         <p style="margin-bottom: 1rem;">
