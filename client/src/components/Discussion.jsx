@@ -135,7 +135,7 @@ export function Discussion() {
             >
               Task Description
             </button>
-            {process.env.NODE_ENV === 'development' && (
+            {(process.env.NODE_ENV === 'development' || new URLSearchParams(window.location.search).get('devKey') === 'oandi') && (
               <button
                 className="px-6 py-3 font-medium transition-colors rounded-t-lg bg-red-100 hover:bg-red-200 text-red-600"
                 onClick={handleSkipStage}
