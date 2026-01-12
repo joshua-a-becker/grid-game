@@ -178,11 +178,11 @@ export async function tryAssignPlayers(ctx) {
              game.get("isWaiting") === true;
     });
 
-  console.log(`[ASSIGNMENT] Total players waiting: ${waitingPlayers.length}`);
+  // console.log(`[ASSIGNMENT] Total players waiting: ${waitingPlayers.length}`);
 
   // Need at least 4 players
   if (waitingPlayers.length < 4) {
-    console.log(`[ASSIGNMENT] Not enough players yet (need 4, have ${waitingPlayers.length})`);
+    // console.log(`[ASSIGNMENT] Not enough players yet (need 4, have ${waitingPlayers.length})`);
     return;
   }
 
