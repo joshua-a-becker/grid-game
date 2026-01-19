@@ -1,6 +1,29 @@
 import { usePlayer, useGame } from "@empirica/core/player/classic/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "../components/Button.jsx";
+
+// Separate component for submission input to handle local state + debounced server sync
+function SubmissionInput({ player }) {
+  const [localValue, setLocalValue] = useState(() => player.get("submission") || "");
+
+  // Debounced sync to server
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      player.set("submission", localValue);
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [localValue, player]);
+
+  return (
+    <textarea
+      className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 text-base resize-none"
+      style={{ minHeight: '288px' }}
+      placeholder="Enter your submission here..."
+      value={localValue}
+      onChange={(e) => setLocalValue(e.target.value)}
+    />
+  );
+}
 
 export function SubmitPage({ next }) {
   const player = usePlayer();
@@ -45,13 +68,7 @@ export function SubmitPage({ next }) {
           <form onSubmit={handleSubmit} className="px-8 py-8">
             <div className="space-y-6">
               <div>
-                <textarea
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 text-base resize-none"
-                  style={{ minHeight: '288px' }}
-                  placeholder="Enter your submission here..."
-                  value={player.get("submission") || ""}
-                  onChange={(e) => player.set("submission", e.target.value)}
-                />
+                <SubmissionInput player={player} />
               </div>
 
               <div className="flex justify-end pt-4">
