@@ -1,8 +1,43 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { usePlayer, usePlayers, useGame } from "@empirica/core/player/classic/react";
 import { cluesByColor, sharedClues } from "../../../clues.js";
 import { Timer } from "./Timer.jsx";
 import { DyadicChat } from "./DyadicChat.jsx";
+
+// Separate component for clue input to handle local state + debounced server sync
+function ClueInput({ clueId, player, onWobble }) {
+  // Initialize from server state (only on mount)
+  const [localValue, setLocalValue] = useState(() => player.get(`clueResponse_${clueId}`) || "");
+  const textareaRef = useRef(null);
+
+  // Debounced sync to server
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      player.set(`clueResponse_${clueId}`, localValue);
+      onWobble();
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [localValue, clueId, player, onWobble]);
+
+  // Auto-resize
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    }
+  }, [localValue]);
+
+  return (
+    <textarea
+      ref={textareaRef}
+      value={localValue}
+      onChange={(e) => setLocalValue(e.target.value)}
+      placeholder="Enter your answer..."
+      rows={2}
+      className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none overflow-hidden"
+    />
+  );
+}
 
 export function Discussion() {
   const player = usePlayer();
@@ -41,21 +76,6 @@ export function Discussion() {
   Object.values(cluesByColor).flat().forEach((clue) => {
     clueMap[clue.id] = clue;
   });
-
-  // Auto-resize textarea function
-  const autoResizeTextarea = (element) => {
-    if (element) {
-      element.style.height = 'auto';
-      element.style.height = element.scrollHeight + 'px';
-    }
-  };
-
-  // Handle input change for non-owned clues
-  const handleInputChange = (clueId, value, element) => {
-    player.set(`clueResponse_${clueId}`, value);
-    autoResizeTextarea(element);
-    initiateWobble();
-  };
 
   // Handle source change for non-owned clues
   const handleSourceChange = (clueId, source) => {
@@ -216,14 +236,10 @@ export function Discussion() {
                           </div>
                         ) : (
                           <div>
-                            <textarea
-                              value={player.get(`clueResponse_${clue.id}`) || ""}
-                              onChange={(e) =>
-                                handleInputChange(clue.id, e.target.value, e.target)
-                              }
-                              placeholder="Enter your answer..."
-                              rows={2}
-                              className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none overflow-hidden"
+                            <ClueInput
+                              clueId={clue.id}
+                              player={player}
+                              onWobble={initiateWobble}
                             />
                             <div className="mt-2">
                               <style>{`
